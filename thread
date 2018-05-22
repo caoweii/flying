@@ -1,0 +1,237 @@
+====================================单例： 懒汉式===================================
+/**
+ * 懒汉式：
+ *
+ * 单例设计模式
+ * 确保一个类只有一个对象
+ * 懒汉式  double checking
+ * 1、构造器私有化,避免外部直接创建对象
+ * 2、声明一个私有的静态变量
+ * 3、创建一个对外的公共的静态方法 访问该变量，如果变量没有对象，创建该对象
+ */
+class Jvm {
+	//声明一个私有的静态变量
+	private static Jvm instance =null;	
+	//构造器私有化,避免外部直接创建对象
+	private Jvm(){
+		
+	}
+	//创建一个对外的公共的静态方法 访问该变量，如果变量没有对象，创建该对象
+	public static Jvm getInstance(long time){
+		// c d e  -->效率  提供 已经存在对象的访问效率
+		if(null==instance){	
+			// a b
+			synchronized(Jvm.class){
+				if(null==instance ){
+					try {
+						Thread.sleep(time); //延时 ，放大错误
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					instance =new Jvm();
+				}
+			}
+	  }//a
+	  return instance;
+	}
+  }
+  
+  
+===================================单例： 饿汉式=====================================
+  /**
+ * 饿汉式
+   1)、构造器私有化 
+ * 2)、声明私有的静态属性,同时创建该对象
+ * 3)、对外提供访问属性的静态方法
+ * @author Administrator
+ *
+ */
+class MyJvm2 {
+	private static MyJvm2 instance =new MyJvm2();
+	private MyJvm2(){
+		
+	}
+	public static MyJvm2 getInstance (){		
+		return instance;
+	}
+
+}
+/**
+ * 类在使用的时候加载 ，延缓加载时间
+ * @author Administrator
+ *
+ */
+class MyJvm3 {
+	private static class JVMholder{
+		private static MyJvm3 instance =new MyJvm3();
+	}
+	private MyJvm3(){
+		
+	}
+	public static MyJvm3 getInstance (){		
+		return JVMholder.instance;
+	}
+}
+
+====================================阻塞====================================
+
+/**
+ * join:合并线程
+ * if(50==i){t.join(); //main阻塞...}  join 运行完成后，main 继续运行
+ */
+public class JoinDemo01 extends Thread {
+
+	public static void main(String[] args) throws InterruptedException {
+		JoinDemo01 demo = new JoinDemo01();
+		Thread t = new Thread(demo); //新生
+		t.start();//就绪
+		//cpu调度 运行
+		for(int i=0;i<1000;i++){
+			if(50==i){
+				t.join(); //main阻塞...
+			}
+			System.out.println("main...."+i);
+		}
+	}
+	
+	@Override
+	public void run() {
+		for(int i=0;i<1000;i++){
+			System.out.println("join...."+i);
+		}
+	}
+}
+
+=====================================stop===================================
+
+public class StopDemo {
+
+	public static void main(String[] args) {
+		Study s =new Study();
+		new Thread(s).start();
+		
+		//外部干涉
+		for(int i=0;i<100;i++){
+			if(50==i){ //外部干涉
+				s.stop();
+			}
+			System.out.println("main.....-->"+i);
+		}
+	}
+
+}
+
+class Study implements Runnable{
+	 //1)、线程类中 定义 线程体使用的标识	 
+	private boolean flag =true;
+	@Override
+	public void run() {
+		//2)、线程体使用该标识
+		while(flag){
+			System.out.println("study thread....");
+		}
+	}
+	//3)、对外提供方法改变标识
+	public void stop(){
+		this.flag =false;
+	}
+}
+====================================yeld====================================
+public class YieldDemo extends Thread {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		YieldDemo01 demo = new YieldDemo01();
+		Thread t = new Thread(demo); // 新生
+		t.start();// 就绪
+		// cpu调度 运行
+
+		for (int i = 0; i < 1000; i++) {
+			if (i % 20 == 0) {
+				// 暂停本线程 main
+				Thread.yield();
+			}
+			System.out.println("main...." + i);
+		}
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < 1000; i++) {
+			System.out.println("yield-------" + i);
+		}
+	}
+}
+
+====================================单例： 确保一个类只有一个对象====================================
+
+public class SynDemo02 {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		JvmThread thread1 = new JvmThread(100);
+		JvmThread thread2 = new JvmThread(500);
+		thread1.start();
+		thread2.start();
+		
+	}
+
+}
+class JvmThread extends Thread{
+	private long time;
+	public JvmThread() {
+	}
+	public JvmThread(long time) {
+		this.time =time;
+	}
+	@Override
+	public void run() {		
+		System.out.println(Thread.currentThread().getName()+"-->创建:"+Jvm.getInstance(time));
+	}
+}
+
+
+class Jvm {
+	//声明一个私有的静态变量
+	private static Jvm instance =null;	
+	//构造器私有化,避免外部直接创建对象
+	private Jvm(){
+		
+	}
+	//创建一个对外的公共的静态方法 访问该变量，如果变量没有对象，创建该对象
+	public static Jvm getInstance(long time){
+		// c d e  -->效率  提供 已经存在对象的访问效率
+		if(null==instance){	
+			// a b
+			synchronized(Jvm.class){
+				if(null==instance ){
+					try {
+						Thread.sleep(time); //延时 ，放大错误
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					instance =new Jvm();
+				}
+			}
+	  }
+	  return instance;
+	}
+}
+========================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
