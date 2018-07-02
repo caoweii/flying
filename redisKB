@@ -1,0 +1,6 @@
+--进入redis 目录
+启动redis
+redis-server.exe redis.conf 
+redis-server.exe redis.windows.conf 
+
+redis-cli.exe
