@@ -22,48 +22,34 @@ window中通过图形化界面和鼠标可以任意切换需要进入的目录�
 (2)查看目录（查）
 命令：ls [-al] 父目录
 示例：在根目录 / 下使用ls，可以看到该目录下的所有的目录和文件
-
 示例：在根目录 / 下使用ls -a，可以看到该目录下的所有文件和目录，包括隐藏的
-
 示例：在根目录 / 下使用ls -l，可以看到该目录下的所有目录和文件的详细信息
-
 注意：ls -l 可以缩写成ll
-
 
 (3)寻找目录（查）
 命令：find 目录 参数
 示例：查找/root下的与test相关的目录(文件)  find /root -name ‘test*’
 
-
 (4)修改目录的名称（改）
 命令：mv 目录名称 新目录名称
 示例：test目录下有一个oldTest目录，使用mv oldTest newTest命令修改
-
 注意：mv的语法不仅可以对目录进行重命名而且也可以对各种文件，压缩包等进行	重命名的操作
 
 (5)移动目录的位置---剪切（改）
 命令：mv 目录名称 目录的新位置
 示例：在test下将newTest目录剪切到 /usr下面，使用mv newTest /usr
-
 注意：mv语法不仅可以对目录进行剪切操作，对文件和压缩包等都可执行剪切操作
-
 
 (6)拷贝目录（改）
 命令：cp -r 目录名称 目录拷贝的目标位置 -----r代表递归拷贝
 示例：将/usr下的newTest拷贝到根目录下的test中，使用cp -r /usr/newTest /test
-
 注意：cp命令不仅可以拷贝目录还可以拷贝文件，压缩包等，拷贝文件和压缩包时不	用写-r递归
 
 (7)删除目录（删）
 命令：rm [-rf] 目录
 示例：删除/usr下的newTest，进入/usr下使用rm -r newTest
-
 示例：删除/test下的newTest而不需要询问强制删除，在/test下使用rm -rf newTest
-
 注意：rm不仅可以删除目录，也可以删除其他文件或压缩包，为了增强大家的记忆，	无论删除任何目录或文件，都直接使用rm -rf 目录/文件/压缩包
-
-
-
 
 3．文件的操作命令（增删改查）
 (1)文件的创建（增）
@@ -72,12 +58,10 @@ window中通过图形化界面和鼠标可以任意切换需要进入的目录�
 
 (2)文件的查看（查）
 命令：cat/more/less/tail 文件
-
 使用cat查看/etc/sudo.conf文件，只能显示最后一屏内容
 使用more查看/etc/sudo.conf文件，可以显示百分比，回车可以向下一行，	空格可以向下一页，q可以退出查看
 用less查看/etc/sudo.conf文件，可以使用键盘上的PgUp和PgDn向上	和向下翻页，q结束查看
 使用tail -10 查看/etc/sudo.conf文件的后10行，Ctrl+C结束
-
 注意：命令 tail -f 文件 可以对某个文件进行动态监控，例如tomcat的日志文件，	会随着程序的运行，日志会变化，可以使用tail -f catalina-2016-11-11.log 监控	文	件的变化 
 
 (3)修改文件的内容（改）
@@ -119,8 +103,6 @@ tar -xvf xxx.tar.gz
 示例：将/test下的xxx.tar.gz解压到根目录/usr下
 tar -xvf xxx.tar.gz -C /usr------C代表指定解压的位置
 
-
-
 5．其他命令
 (1)显示当前所在位置
 pwd
@@ -128,9 +110,7 @@ pwd
 (2)搜索命令
 命令：grep 要搜索的字符串 要搜索的文件
 示例：搜索/usr/sudu.conf文件中包含字符串to的行
-
 示例：搜索/usr/sudu.conf文件中包含字符串to的行 to要高亮显示
-
 
 (3)管道命令
 命令：|   将前一个命令的输出作为本次目录的输入
@@ -139,8 +119,6 @@ pwd
 (4)查看进程
 命令：ps -ef
 示例：查看当前系统中运行的进程 
-
-
 
 (5)杀死进程
 命令：kill -9 进程的pid
@@ -179,7 +157,6 @@ chmod u=rwx,g=rw,o=r aaa.txt
 上述示例还可以使用数字表示：
 chmod 764 aaa.txt
 
-
 五、Linux的软件安装
 1．JDK安装
 注意：rpm与软件相关命令 相当于window下的软件助手 管理软件
@@ -200,7 +177,6 @@ chmod 764 aaa.txt
 	PATH=$JAVA_HOME/bin:$PATH
 	export JAVA_HOME CLASSPATH PATH 
 7）重新加载/etc/profile配置文件 source /etc/profile
-
 
 2．Mysql安装
 步骤：
@@ -240,7 +216,6 @@ flush privileges;
 /sbin/iptables -I INPUT -p tcp --dport 3306 -j ACCEPT
 /etc/rc.d/init.d/iptables save ---将修改永久保存到防火墙中
 
-
 3．Tomcat安装
 步骤：
 1）上传Tomcat到linux上
@@ -265,3 +240,9 @@ firewall-cmd --zone=public --add-port=8081/tcp --permanent
 重启防火墙
 firewall-cmd --reload 
 -----------------------------------------------------------------------
+上传下载
+sz命令发送文件到本地：
+# sz filename
+rz命令本地上传文件到服务器：
+# rz
+
