@@ -1,3 +1,42 @@
+--------------------------------------------------------------------------------
+mysql 授权:
+1 创建完成了，在程序里面连接发现还是没有权限，刚才我们只是创建了用户，还没有对这个用户分配权限；
+grant all privileges on *.* to 'root'@'%'identified by '123456' with grant option;
+grant all privileges on *.* to 'root'@'%'identified by '123456';
+2 刷新
+flush privileges ;
+
+mysql 导库
+
+1 从其它地方导出:
+打开开始->运行->输入cmd    进入命令行模式
+到mysqlbin 目录下
+执行
+mysqldump -h 192.168.1.43 -uroot -pchangeme sims>E:\sims.sql
+
+2 导入到本地库:
+常用source 命令
+进入mysql数据库控制台，如
+mysql -u root -p
+mysql>use 数据库
+然后使用source命令，后面参数为脚本文件(如这里用到的.sql)
+mysql>source E:\sims.sql
+
+3 查看数据库编码 （https://www.cnblogs.com/jiangxiaobo/p/6110647.html）
+mysql> show variables like 'collation%';
++----------------------+-------------------+
+| Variable_name        | Value             |
++----------------------+-------------------+
+| collation_connection | utf8_general_ci   |
+| collation_database   | utf8_general_ci   |
+| collation_server     | latin1_swedish_ci |
++----------------------+-------------------+
+rows in set (0.00 sec)
+-----------------
+b'0' false
+b'1' true
+
+--------------------------------------------------------------------------------
 MySQL 查看约束，添加约束，删除约束 添加列，修改列，删除列 
 
 查看表的字段信息：desc 表名;
@@ -9,9 +48,9 @@ MySQL 查看约束，添加约束，删除约束 添加列，修改列，删除�
 删除主键约束：alter table 表名 drop primary key;
 删除外键约束：alter table 表名 drop foreign key 外键（区分大小写）;
 
-修改表名：alter table t_book rename to bbb;
-添加列：alter table 表名 add column 列名 varchar(30);
-删除列：alter table 表名 drop column 列名;
+修改表名：alter table tableName rename to bbb;
+添加列：alter table tableName add column 列名 varchar(30);
+删除列：alter table tableName drop column 列名;
 
 修改列属性：alter table t_book modify name varchar(22);
 
