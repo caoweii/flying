@@ -1,0 +1,91 @@
+http://www.cnblogs.com/cowboys/p/6163664.html
+https://blog.csdn.net/qq_33382113/article/details/78853680
+https://blog.csdn.net/seven_coder/article/details/50946562
+
+
+
+https://blog.csdn.net/evankaka/article/details/50495437
+
+
+http://localhost:15672/#/
+
+http://anhongyang125.iteye.com/blog/2353991
+https://www.cnblogs.com/ASPNET2008/p/6414145.html
+https://github.com/dyc87112/SpringBoot-Learning
+
+最新
+https://blog.csdn.net/forezp/article/details/71023692
+
+https://www.cnblogs.com/web424/p/6763031.html
+
+
+https://www.cnblogs.com/libra0920/p/6230421.html
+
+rabbit 相关命令
+https://blog.csdn.net/lglgsy456/article/details/79045850
+
+启动			service rabbitmq-server start
+停止			rabbitmqctl stop 
+查看状态		rabbitmqctl status
+新增用户 		rabbitmqctl add_user  caowei2  123456
+删除用户		rabbitmqctl delete_user  Username 
+修改用户密码 	rabbitmqctl change_password  Username  Newpassword
+查看所有队列信息rabbitmqctl list_queues
+用户列表 		rabbitmqctl list_users
+
+赋权限			rabbitmqctl set_user_tags admin administrator
+设置用户权限	rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
+列出用户权限	rabbitmqctl list_user_permissions username
+清除用户权限 	rabbitmqctl clear_permissions -p vhostpath username
+
+创建虚拟主机 rabbitmqctl add_vhost vhostpath：
+列出所有虚拟主机 rabbitmqctl list_vhosts
+列出虚拟主机上的所有权限  rabbitmqctl list_permissions -p vhostpath：
+清除队列里的消息 rabbitmqctl -p vhostpath purge_queue blue
+删除虚拟主机 rabbitmqctl delete_vhost vhostpath
+
+
+可视化插件（http://127.0.0.1:15672/） admin/admin
+rabbitmq-plugins enable rabbitmq_management
+
+
+spring.application.name=rabbitmq-hello
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=caowei
+spring.rabbitmq.password=123456
+
+
+
+http://localhost:15672/cli/
+
+ 服务器状态：rabbitmqctl status
+
+       队列信息：rabbitmqctl list_queues[-p vhostpath] [queueinfoitem ...]
+
+                Queueinfoitem可以为：name，durable，auto_delete，arguments，messages_ready，
+
+                messages_unacknowledged，messages，consumers，memory
+
+       Exchange信息：rabbitmqctllist_exchanges[-p vhostpath] [exchangeinfoitem ...]
+
+                 Exchangeinfoitem有：name，type，durable，auto_delete，internal，arguments.
+
+       Binding信息：rabbitmqctllist_bindings[-p vhostpath] [bindinginfoitem ...]       
+
+                 Bindinginfoitem有：source_name，source_kind，destination_name，destination_kind，routing_key，arguments
+
+       Connection信息：rabbitmqctllist_connections [connectioninfoitem ...]
+
+       Connectioninfoitem有：recv_oct，recv_cnt，send_oct，send_cnt，send_pend等。
+
+       Channel信息：rabbitmqctl  list_channels[channelinfoitem ...]
+
+      Channelinfoitem有consumer_count，messages_unacknowledged，messages_uncommitted，acks_uncommitted，messages_unconfirmed，prefetch_count，client_flow_blocked
+
+http://www.blogjava.net/qbna350816/archive/2016/07/30/431394.html
+
+如果没有指定channelinfoitems，那么将显示pid, user, consumer_count,messages_unacknowledged．
+
+例如:
+rabbitmqctl list_channels connection pid
