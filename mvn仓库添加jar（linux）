@@ -1,0 +1,9 @@
+sdk-20170724.jar
+
+   <dependency>
+            <groupId>com.taobao</groupId>
+            <artifactId>sdk</artifactId>
+            <version>20170724</version>
+        </dependency>
+
+mvn install:install-file   -Dfile=home/caowei/sdk-20170724.jar  -DgroupId=com.taobao  -DartifactId=sdk -Dversion=20170724  -Dpackaging=jar
