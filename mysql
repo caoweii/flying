@@ -1,6 +1,10 @@
 --------------------------------------------------------------------------------
- mysql -h rm-bp1037gdc98086nd4.mysql.rds.aliyuncs.com -P 3306 -u root -p
- mysql -uroot -p
+验证安装是否成功：
+c:/>mysql -h localhost -u root -p
+默认有三个库：
+information_schema, mysql, test(空库)
+
+mysql -h rm-bp1037gdc98086nd4.mysql.rds.aliyuncs.com -P 3306 -u root -p
 --------------------------------------------------------------------------------
 mysql 授权:
 1 创建完成了，在程序里面连接发现还是没有权限，刚才我们只是创建了用户，还没有对这个用户分配权限；
@@ -34,14 +38,42 @@ mysql> show variables like 'collation%';
 | collation_database   | utf8_general_ci   |
 | collation_server     | latin1_swedish_ci |
 +----------------------+-------------------+
+--------------------------------------------------------------------------------
+Window系统下：不区分大小写
+其他系统：严格区分大小写
+--------------------------------------------------------------------------------
 rows in set (0.00 sec)
------------------
+----------------------
 b'0' false
 b'1' true
 
 --------------------------------------------------------------------------------
+DDL数据定义语言（Data Definition Language）:
+数据库操作
+创建一个名称为mydb1的数据库。
+mysql>CREATE DATABASE mydb1;(默认用服务器的字符集)
+
+查看数据库的创建细节（可以看到使用的字符集）
+mysql>SHOW CREATE DATABASE mydb1;
+
+创建一个使用gbk字符集的mydb2数据库。
+mysql>CREATE DATABASE mydb2 CHARACTER SET gbk;
+
+创建一个使用gbk字符集，并带校对规则的mydb3数据库。
+mysql>CREATE DATABASE mydb3 CHARACTER SET gbk COLLATE gbk_chinese_ci;
+
+查看当前数据库服务器中的所有数据库
+mysql>SHOW DATABASES;
+删除前面创建的mydb3数据库
+mysql>DROP DATABASE mydb3;
+
+查看服务器中的数据库，并把mydb2的字符集修改为utf8;
+mysql>ALTER DATABASE mydb2 CHARACTER SET utf8;
+
+--------------------------------------------------------------------------------
+
 MySQL 查看约束，添加约束，删除约束 添加列，修改列，删除列 
-查看表的字段信息: desc 表名;
+查看表结构/字段信息: desc 表名;
 查看库中所有表:   show tables;
 查看标的创建语句（查看编码）: show create table 表名;
 
@@ -63,6 +95,70 @@ MySQL 查看约束，添加约束，删除约束 添加列，修改列，删除�
 sp_rename：SQLServer 内置的存储过程，用与修改表的定义。
 
 --------------------------------------------------------------------------------
+查看表的结构：        mysql>DESC employee;
+在上面员工表的基础上增加一个image列： mysql>ALTER TABLE employee ADD image BLOB;
+修改job列，使其长度为60。：          mysql>ALTER TABLE employee MODIFY job VARCHAR(60);
+删除image列。：                     mysql>ALTER TABLE employee DROP image;
+查看当前库中的所有表：               mysql>SHOW TABLES;
+表名改为user(Oracle中是关键字)。：   mysql>RENAME TABLE employee TO user;
+查看表的创建语句（查看编码）： mysql>SHOW CREATE TABLE user;
+修改表的字符集为gbk：         mysql>ALTER TABLE user CHARACTER SET gbk;
+列名name修改为username：     mysql>ALTER TABLE user CHANGE name username VARCHAR(100);
 
+--------------------------------------------------------------------------------
 
+使用insert语句向表中插入三个员工的信息
+mysql>(推荐)INSERT INTO user (id,username,gender,birthday,entry_date,job,salary,resume) VALUES (1,'qihuasen','male','1986-09-08','2014-04-17','CEO',15000,'NB');
+mysql>INSERT INTO user VALUES (2,'yuxiaofeng','male','1991-09-08','2014-04-17','CTO',14000,'NBA');
+中文数据
+mysql>INSERT INTO user VALUES (3,'王斐','female','1970-09-08','2014-04-17','CXX',18000,'beauty');
+错误：ERROR 1406 (22001): Data too long for column 'username' at row 1
+原因：1、确实超出了长度 2、编码问题
 
+告知服务器，客户端使用的编码(临时告知)：          mysql>set character_set_client=gbk;
+告知服务器，客户端显示结果集用的编码（临时告知） ：mysql>set character_set_results=gbk;
+
+mysql>INSERT INTO user VALUES (3,'王斐','female','1970-09-08','2014-04-17','CXX',18000,'beauty');  ok
+
+--------------------------------------------------------------------------------
+数据库的编码：
+mysql>SHOW VARIABLES LIKE 'character%';
+
+(*)client是客户端使用的字符集。 
+(*)connection是连接数据库的字符集设置类型，如果程序没有指明连接数据库使用的字符集类型就按照服务器端默认的字符集设置。       
+database是数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装时指定的字符集设置。    
+(*)results是数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。       
+server是服务器安装时指定的默认字符集设定。       
+system是数据库系统使用的字符集设定。
+
+将姓名为’qihuasen’的员工薪水修改为3000元。：      mysql>UPDATE user SET salary=3000 WHERE username='qihuasen';
+将姓名为’王斐’的员工薪水修改为4000元,job改为CCC。：mysql>UPDATE user SET salary=4000,job='CCC' WHERE username='王斐';
+将yuxiaofeng的薪水在原有基础上增加1000元：        mysql>UPDATE user SET salary=salary+1000 WHERE username='yuxiaofeng';
+
+--------------------------------------------------------------------------------
+删除表中名称为’yuxiaofeng’的记录。 mysql>DELETE FROM user WHERE username='yuxiaofeng';
+删除表中所有记录。：               mysql>DELETE FROM user;（一条条记录）
+使用truncate删除表中记录(DDL)。：  mysql>TRUNCATE TABLE user;  (摧毁表结构，然后重新建立表结构)
+--------------------------------------------------------------------------------
+过滤表中英语重复数据。  mysql>SELECT DISTINCT english FROM student;
+在所有学生数学分数上加10分特长分。 mysql>SELECT name,math+10 FROM student;
+统计每个学生的总分。    mysql>SELECT name,chinese+english+math FROM student;
+使用别名表示学生分数。  mysql>SELECT name AS 姓名,chinese+english+math 总分 FROM student;
+--------------------------------------------------------------------------------
+数据完整性
+作用：数据完整性是为了保证插入到数据库中的数据是正确的，它防止了用户可能的输入错误
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
